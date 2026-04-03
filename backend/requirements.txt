@@ -1,0 +1,23 @@
+# Web framework
+fastapi==0.135.1
+uvicorn==0.42.0
+
+# Banco de dados
+sqlalchemy==2.0.48
+alembic==1.18.4
+asyncpg==0.31.0
+
+# Validação
+pydantic==2.12.5
+pydantic-settings==2.9.1
+
+# Redis e filas
+redis==5.3.1
+arq==0.27.0
+
+# Segurança
+bcrypt==4.0.1
+python-jose==3.5.0
+
+# Download do Instagram
+instaloader

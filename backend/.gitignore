@@ -1,0 +1,28 @@
+# Ambiente virtual — gerado localmente, nunca commitar
+.venv/
+
+# Arquivos compilados Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Variáveis de ambiente — nunca commitar!
+.env
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de teste e cobertura
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Arquivos de build
+dist/
+build/
+*.egg-info/
+
+# Kubernetes — arquivo local de namespace
+k8s/local/.local-namespace

@@ -1,0 +1,8 @@
+# Inclui todas as dependências de runtime
+-r requirements.txt
+
+# Ferramentas de desenvolvimento
+pytest==8.3.5
+pytest-asyncio==0.25.3
+httpx==0.28.1
+ruff==0.9.10
