@@ -2,22 +2,19 @@
 buscar_dados.py
 ---------------
 Busca e exibe todos os dados relevantes de um perfil público do Instagram.
+Refatorado na Aula 8 para usar o módulo instaloader_client.
 
-Aula 6 — Módulo 2: Conhecendo o instaloader
+Aula 6 (refatorado na Aula 8) — Módulo 3: Script Core em Python
 Curso: Instagram Downloader
 """
 
 import instaloader
+from instaloader_client import buscar_perfil, carregar_sessao, criar_loader
 
 # ─── Configurações ────────────────────────────────────────────────────────────
 
-# Conta secundária que você usa para autenticar (sem @)
-MINHA_CONTA = "teste_user1"
-
-# Perfil público que vamos buscar (sem @)
-PERFIL_ALVO = "teste_user2"
-
-# ─── Funções ──────────────────────────────────────────────────────────────────
+MINHA_CONTA = "seu_usuario"   # substitua pelo seu username
+PERFIL_ALVO = "nasa"
 
 
 def exibir_dados_perfil(perfil: instaloader.Profile) -> None:
@@ -62,34 +59,21 @@ def exibir_dados_perfil(perfil: instaloader.Profile) -> None:
     print("\n" + "=" * 60)
 
 
-# ─── Ponto de entrada ──────────────────────────────────────────────────────────
-
 def main():
-    # 1. Cria o Instaloader
     print("🏭 Criando o Instaloader...")
-    L = instaloader.Instaloader(quiet=True)
+    L = criar_loader()
 
-    # 2. Carrega a sessão
     print(f"🔐 Carregando sessão de @{MINHA_CONTA}...")
-    try:
-        L.load_session_from_file(MINHA_CONTA)
-        print("✅ Sessão carregada com sucesso!")
-    except FileNotFoundError:
-        print(f"❌ Arquivo de sessão não encontrado para @{MINHA_CONTA}.")
-        print("   Execute o Passo 4 da Aula 5 para gerar o arquivo de sessão.")
+    if not carregar_sessao(L, MINHA_CONTA):
         return
+    print("✅ Sessão carregada com sucesso!")
 
-    # 3. Busca o perfil
     print(f"\n🔍 Buscando perfil @{PERFIL_ALVO}...")
-    try:
-        perfil = instaloader.Profile.from_username(L.context, PERFIL_ALVO)
-    except instaloader.exceptions.ProfileNotExistsException:
-        print(f"❌ Perfil @{PERFIL_ALVO} não encontrado.")
+    perfil = buscar_perfil(L, PERFIL_ALVO)
+    if perfil is None:
         return
 
-    # 4. Exibe os dados
     exibir_dados_perfil(perfil)
-
     print("\n✅ Busca concluída!")
 
 
