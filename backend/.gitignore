@@ -26,3 +26,6 @@ build/
 
 # Kubernetes — arquivo local de namespace
 k8s/local/.local-namespace
+
+# Downloads do instaloader
+downloads/
