@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: instagram-downloader-redis-statefulset
+spec:
+  selector:
+    matchLabels:
+      app: instagram-downloader-redis
+  serviceName: instagram-downloader-redis-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: instagram-downloader-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          command: ["redis-server", "/etc/redis/redis.conf"]
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-storage
+              mountPath: /data
+            - name: redis-config
+              mountPath: /etc/redis
+      volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: instagram-downloader-redis-pvc
+        - name: redis-config
+          configMap:
+            name: instagram-downloader-redis-configmap

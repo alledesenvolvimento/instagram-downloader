@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: instagram-downloader-redis-configmap
+data:
+  redis.conf: |
+    appendonly yes
+    appendfsync everysec

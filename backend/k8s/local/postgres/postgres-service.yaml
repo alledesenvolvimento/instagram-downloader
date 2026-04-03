@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: instagram-downloader-postgres-service
+spec:
+  selector:
+    app: instagram-downloader-postgres
+  type: NodePort
+  ports:
+    - port: 5432
+      targetPort: 5432
