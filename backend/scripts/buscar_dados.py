@@ -12,10 +12,10 @@ import instaloader
 # ─── Configurações ────────────────────────────────────────────────────────────
 
 # Conta secundária que você usa para autenticar (sem @)
-MINHA_CONTA = "amanda_souto2025"
+MINHA_CONTA = "teste_user1"
 
 # Perfil público que vamos buscar (sem @)
-PERFIL_ALVO = "natgeo"
+PERFIL_ALVO = "teste_user2"
 
 # ─── Funções ──────────────────────────────────────────────────────────────────
 
