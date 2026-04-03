@@ -28,4 +28,5 @@ build/
 k8s/local/.local-namespace
 
 # Downloads do instaloader
-downloads/
+downloads/*
+!downloads/.gitkeep
