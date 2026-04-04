@@ -5,6 +5,7 @@ Baixa os posts mais recentes de um perfil público do Instagram
 e os organiza em pastas separadas por post, nomeadas com o shortcode.
 
 Aula 9 — Módulo 3: Script Core em Python
+Atualizado na Aula 10 — salva legenda em legenda.txt
 Curso: Instagram Downloader
 """
 
@@ -15,7 +16,7 @@ from instaloader_client import buscar_perfil, carregar_sessao, criar_loader
 
 # ─── Configurações ────────────────────────────────────────────────────────────
 
-MINHA_CONTA = "seu_usuario"   # substitua pelo seu username
+MINHA_CONTA = "amanda_souto2025"
 PERFIL_ALVO     = "nasa"
 LIMITE_POSTS    = 3               # quantos posts baixar
 PASTA_DOWNLOADS = Path("downloads")
@@ -45,6 +46,15 @@ def renomear_arquivos(pasta_post: Path) -> None:
             contador_video += 1
 
 
+def salvar_legenda(pasta_post: Path, caption: str | None) -> None:
+    """Salva a legenda do post em um arquivo legenda.txt."""
+    caminho = pasta_post / "legenda.txt"
+    conteudo = caption if caption else "(sem legenda)"
+
+    with open(caminho, "w", encoding="utf-8") as f:
+        f.write(conteudo)
+
+
 def baixar_post(L, post, pasta_perfil: Path) -> Path:
     """
     Baixa um post e o salva em uma subpasta nomeada com o shortcode.
@@ -60,6 +70,7 @@ def baixar_post(L, post, pasta_perfil: Path) -> Path:
     pasta_post.mkdir(parents=True, exist_ok=True)
     L.download_post(post, target=pasta_post)
     renomear_arquivos(pasta_post)
+    salvar_legenda(pasta_post, post.caption)
 
     return pasta_post
 
