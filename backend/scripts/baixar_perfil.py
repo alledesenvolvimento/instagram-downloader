@@ -19,7 +19,7 @@ from instaloader_client import buscar_perfil, carregar_sessao, criar_loader
 
 # ─── Configurações ────────────────────────────────────────────────────────────
 
-MINHA_CONTA = "amanda_souto2025"
+MINHA_CONTA = "seu_usuario"   # substitua pelo seu username
 PERFIL_ALVO = "nasa"
 LIMITE_POSTS    = 3
 PASTA_DOWNLOADS = Path("downloads")
