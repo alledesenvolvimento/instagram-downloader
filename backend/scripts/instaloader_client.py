@@ -7,6 +7,8 @@ Todas as operações comuns — criar o Instaloader, carregar sessão,
 buscar perfil e buscar post — ficam aqui para evitar repetição
 nos scripts que usam a biblioteca.
 
+Atualizado na Aula 11 — tratamento de erros robusto.
+
 Módulo 3 — Script Core em Python
 Curso: Instagram Downloader
 """
@@ -56,11 +58,24 @@ def buscar_perfil(
     Busca e retorna o objeto Profile para o username informado.
 
     Retorna None se o perfil não for encontrado.
+    Informa se o perfil é privado.
     """
     try:
-        return instaloader.Profile.from_username(L.context, username)
+        perfil = instaloader.Profile.from_username(L.context, username)
+
+        if perfil.is_private:
+            print(f"🔒 O perfil @{username} é privado.")
+            print("   Só é possível baixar posts de perfis que você segue com a conta de sessão.")
+            return None
+
+        return perfil
+
     except instaloader.exceptions.ProfileNotExistsException:
         print(f"❌ Perfil @{username} não encontrado.")
+        return None
+
+    except instaloader.exceptions.ConnectionException as e:
+        print(f"❌ Erro de conexão ao buscar @{username}: {e}")
         return None
 
 
@@ -74,6 +89,12 @@ def buscar_post(
     """
     try:
         return instaloader.Post.from_shortcode(L.context, shortcode)
+    except instaloader.exceptions.ProfileNotExistsException:
+        print(f"❌ Post com shortcode '{shortcode}' não encontrado.")
+        return None
+    except instaloader.exceptions.ConnectionException as e:
+        print(f"❌ Erro de conexão ao buscar o post '{shortcode}': {e}")
+        return None
     except Exception as e:
-        print(f"❌ Não foi possível encontrar o post: {e}")
+        print(f"❌ Erro inesperado ao buscar o post '{shortcode}': {e}")
         return None

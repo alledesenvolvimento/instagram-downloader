@@ -6,19 +6,22 @@ e os organiza em pastas separadas por post, nomeadas com o shortcode.
 
 Aula 9 — Módulo 3: Script Core em Python
 Atualizado na Aula 10 — salva legenda em legenda.txt
+Atualizado na Aula 11 — tratamento de erros por post
 Curso: Instagram Downloader
 """
 
 from itertools import islice
 from pathlib import Path
 
+import instaloader
+
 from instaloader_client import buscar_perfil, carregar_sessao, criar_loader
 
 # ─── Configurações ────────────────────────────────────────────────────────────
 
 MINHA_CONTA = "amanda_souto2025"
-PERFIL_ALVO     = "nasa"
-LIMITE_POSTS    = 3               # quantos posts baixar
+PERFIL_ALVO = "nasa"
+LIMITE_POSTS    = 3
 PASTA_DOWNLOADS = Path("downloads")
 
 
@@ -63,7 +66,6 @@ def baixar_post(L, post, pasta_perfil: Path) -> Path:
     """
     pasta_post = pasta_perfil / post.shortcode
 
-    # Se a pasta já existe e já tem arquivos, pula o download
     if pasta_post.exists() and any(pasta_post.iterdir()):
         return pasta_post
 
@@ -99,17 +101,41 @@ def main():
 
     print(f"\n⬇️  Baixando os últimos {LIMITE_POSTS} posts de @{PERFIL_ALVO}...\n")
 
+    erros = 0
+
     for i, post in enumerate(islice(perfil.get_posts(), LIMITE_POSTS), start=1):
         print(f"  [{i}/{LIMITE_POSTS}] {post.shortcode} — {post.typename} ({post.date.strftime('%d/%m/%Y')})")
 
-        pasta_post = baixar_post(L, post, pasta_perfil)
+        try:
+            pasta_post = baixar_post(L, post, pasta_perfil)
 
-        arquivos = sorted(pasta_post.iterdir())
-        for arquivo in arquivos:
-            tamanho_kb = arquivo.stat().st_size / 1024
-            print(f"         💾 {arquivo.name}  ({tamanho_kb:.1f} KB)")
+            arquivos = sorted(pasta_post.iterdir())
+            for arquivo in arquivos:
+                tamanho_kb = arquivo.stat().st_size / 1024
+                print(f"         💾 {arquivo.name}  ({tamanho_kb:.1f} KB)")
+
+        except instaloader.exceptions.TooManyRequestsException:
+            print(f"         🚦 Rate limit atingido — o instaloader vai aguardar automaticamente.")
+            print(f"         ⏳ Isso pode levar alguns minutos. Não feche o terminal.")
+            erros += 1
+
+        except instaloader.exceptions.LoginRequiredException:
+            print(f"         🔒 Não foi possível baixar este post — requer login ou perfil privado.")
+            erros += 1
+
+        except instaloader.exceptions.ConnectionException as e:
+            print(f"         ❌ Erro de conexão: {e}")
+            erros += 1
+
+        except Exception as e:
+            print(f"         ❌ Erro inesperado: {e}")
+            erros += 1
 
     print(f"\n✅ Download concluído! Arquivos em: {pasta_perfil}/")
+
+    if erros > 0:
+        print(f"⚠️  {erros} post(s) com erro — verifique as mensagens acima.")
+
     print("\n📁 Estrutura final:")
     for pasta_post in sorted(pasta_perfil.iterdir()):
         if pasta_post.is_dir():
